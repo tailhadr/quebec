@@ -363,14 +363,14 @@
 
   <header>
     <p class="eyebrow">Ville de Québec · dimanche 9 août</p>
-    <h1>Six adresses,<br>et <em>une seule</em> pour ce midi.</h1>
+    <h1>Sept adresses,<br>et <em>une seule</em> pour ce midi.</h1>
     <p class="chapeau">Où on mange, et surtout quand. Touchez une épingle pour le détail.</p>
   </header>
 
   <div class="grille">
 
     <div class="carte-plan">
-      <svg viewBox="0 0 1000 961" width="1000" height="961" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Plan schématique de la ville de Québec situant les six restaurants">
+      <svg viewBox="0 0 1000 961" width="1000" height="961" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Plan schématique de la ville de Québec situant les sept restaurants">
 
         <rect width="1000" height="961" class="terre"/>
 
@@ -391,7 +391,7 @@
 
         <text class="legende-svg" x="836" y="720" text-anchor="end" transform="rotate(-52 836 720)">Fleuve Saint-Laurent</text>
         <text class="legende-svg" x="500" y="80" text-anchor="middle">Rivière Saint-Charles</text>
-        <text class="legende-svg" x="342" y="700">falaise · 60 m de dénivelé</text>
+        <text class="legende-svg" x="470" y="742">falaise · 60 m de dénivelé</text>
         <text class="legende-svg" x="330" y="376" transform="rotate(-23.6 330 376)">rue Saint-Joseph Est</text>
 
         <g id="epingles"></g>
@@ -421,33 +421,34 @@ const projY = lat => (BORNES.latMax - lat) / (BORNES.latMax - BORNES.latMin) * H
 
 const RESTOS = [
   {
-    n:1, nom:"Griendel", suite:"Brasserie artisanale",
+    n:1, nom:"LIMA", suite:"Resto-bar péruvien",
+    lat:46.8080348, lon:-71.2251,
+    adresse:"203, rue Saint-Jean · Faubourg Saint-Jean-Baptiste",
+    note:"4,9 ★", avis:"1 902 avis", prix:"$$", horaire:"dim. 11 h – 21 h",
+    tel:"+14189433701", telAffiche:"418 943-3701",
+    ton:"phare", badge:"phare", badgeTexte:"Aujourd'hui, midi",
+    quand:"aujourd'hui",
+    ancrage:{x:26, y:-2, ancre:"start"},
+    topo:[
+      "La meilleure note des sept, et l'écart n'est pas un accident statistique : 4,9 tenu sur plus de dix-neuf cents avis, c'est rare à ce volume.",
+      "Cuisine péruvienne franche — ceviche, lomo saltado, anticuchos, pisco sour, jus de fruit de la passion maison. Les portions sont généreuses et plusieurs plats se partagent à deux, ce qui tombe bien pour une table de quatre.",
+      "Deux choses à savoir. La salle est petite et les avis conseillent de réserver. Et le service revient régulièrement comme le point faible — lent, parfois distrait, visiblement en sous-effectif. La cuisine, elle, ne déçoit personne.",
+      "Attention enfin : LIMA a deux adresses à Québec, aux notes quasi identiques. Celle-ci est rue Saint-Jean ; l'autre est rue Saint-Vallier Ouest, dans Saint-Roch."
+    ]
+  },
+  {
+    n:2, nom:"Griendel", suite:"Brasserie artisanale",
     lat:46.8047556, lon:-71.2261922,
     adresse:"46, boulevard René-Lévesque Ouest · Montcalm",
     note:"4,5 ★", avis:"2 024 avis", prix:"$$", horaire:"dim. 12 h – minuit",
     tel:"+14185222552", telAffiche:"418 522-2552",
-    ton:"defaut", badge:"ok", badgeTexte:"Aujourd'hui, midi",
-    quand:"aujourd'hui",
-    ancrage:{x:14, y:-26, ancre:"middle"},
+    ton:"defaut", badge:"ok", badgeTexte:"Terrasse, fin de journée",
+    quand:"terrasse, ce soir",
+    ancrage:{x:14, y:-28, ancre:"middle"},
     topo:[
-      "Le choix pour aujourd'hui, et le seul des six qui coche vraiment toutes les cases d'un dimanche midi d'août.",
-      "Ouverture à midi pile, terrasse, et une salle où les avis décrivent un mélange de familles et d'habitués du quartier plutôt qu'un flux de cars. La carte de bistro est assez large pour que chacun y trouve son compte sans avoir à négocier avec la cuisine.",
-      "Une réserve honnête : plusieurs clients trouvent la garniture de frites chiche sur le burger. Ce n'est pas rédhibitoire, c'est bon à savoir avant de commander."
-    ]
-  },
-  {
-    n:2, nom:"La Barberie", suite:"Microbrasserie & restaurant",
-    lat:46.8178912, lon:-71.2180951,
-    adresse:"310, rue Saint-Roch · Saint-Roch",
-    note:"4,6 ★", avis:"1 184 avis", prix:"$$", horaire:"dim. 12 h – 23 h",
-    tel:"+14185224373", telAffiche:"418 522-4373",
-    ton:"defaut", badge:"ok", badgeTexte:"Fin d'après-midi",
-    quand:"apéro",
-    ancrage:{x:0, y:-30, ancre:"middle"},
-    topo:[
-      "La valeur sûre décontractée du séjour, mais à placer au bon moment de la journée.",
-      "Seize fûts, un carrousel de dégustation qui se partage bien à quatre, une grande terrasse, et une huitaine d'options sans alcool — rare et appréciable si quelqu'un ne boit pas. C'est d'abord une brasserie : on y va pour la bière et on mange autour.",
-      "Donc pas pour un vrai repas assis. Parfait en revanche vers 17 h, après une journée de marche, avant d'aller dîner ailleurs."
+      "La meilleure terrasse du lot pour un groupe, et l'endroit où l'on peut s'éterniser sans que personne ne regarde la table.",
+      "Les avis décrivent un mélange de familles et d'habitués du quartier plutôt qu'un flux de cars. La maison brasse sa propre bière, et la carte de bistro est assez large pour que chacun y trouve son compte sans avoir à négocier avec la cuisine.",
+      "Une réserve honnête : plusieurs clients trouvent la garniture de frites chiche sur le burger. Ouvert jusqu'à minuit, donc aucune urgence à s'y présenter tôt."
     ]
   },
   {
@@ -460,9 +461,9 @@ const RESTOS = [
     quand:"un soir de semaine",
     ancrage:{x:0, y:36, ancre:"middle"},
     topo:[
-      "La meilleure table des six, et l'écart n'est pas mince : 4,8 sur plus de mille avis, c'est un score qu'on voit rarement tenir à ce volume.",
+      "La table la plus ambitieuse des sept : 4,8 sur plus de mille avis, un score qu'on voit rarement tenir à ce volume.",
       "Le menu change chaque jour et n'est pas imprimé — il est annoncé à voix haute à toute la salle, en français et en anglais, une fois tout le monde assis. Cuisine ouverte, format maison, deux services par soirée.",
-      "Deux contraintes sérieuses, et elles jouent contre vous. Fermé le dimanche. Et la salle compte neuf tables dont une seule de quatre, plus quatre places au bar. À quatre, en plein mois d'août, ça se joue à l'anticipation : appelle aujourd'hui pour un soir de semaine."
+      "Deux contraintes sérieuses, et elles jouent contre vous. Fermé le dimanche. Et la salle compte neuf tables dont une seule de quatre, plus quatre places au bar. À quatre, en plein mois d'août, ça se joue à l'anticipation : appelez aujourd'hui pour un soir de semaine."
     ]
   },
   {
@@ -471,17 +472,32 @@ const RESTOS = [
     adresse:"49, rue Saint-Louis · Vieux-Québec",
     note:"4,5 ★", avis:"9 652 avis", prix:"$$", horaire:"dim. 8 h – 21 h 30",
     tel:"+15815046894", telAffiche:"581 504-6894",
-    ton:"phare", badge:"phare", badgeTexte:"Un soir, réservé",
+    ton:"defaut", badge:"ok", badgeTexte:"Le soir, sur réservation",
     quand:"un soir",
     ancrage:{x:-16, y:32, ancre:"end"},
     topo:[
       "Le répertoire québécois traditionnel joué franchement : tourtière, soupe aux pois, pâté chinois, fèves au lard, pouding chômeur, crêpes au sirop d'érable.",
-      "Neuf mille six cents avis, c'est deux informations en une. La qualité tient à ce volume, ce qui est un exploit. Et le volume lui-même dit exactement ce que sera la rue Saint-Louis un dimanche midi d'août. Les avis recommandent unanimement de réserver.",
-      "C'est pourtant la seule des six qui vous fera vraiment goûter la cuisine d'ici. Donc : oui, mais un soir, réservé, pas en arrivant à midi le nez au vent."
+      "Neuf mille six cents avis, c'est deux informations en une. La qualité tient à ce volume, ce qui est un exploit. Et le volume lui-même dit exactement ce que sera la rue Saint-Louis un midi d'août. Les avis recommandent unanimement de réserver.",
+      "C'est pourtant la seule des sept qui vous fera vraiment goûter la cuisine d'ici. Donc oui — mais le soir, une table réservée, pas en arrivant à midi le nez au vent."
     ]
   },
   {
-    n:5, nom:"Poutineville", suite:"Saint-Roch",
+    n:5, nom:"La Barberie", suite:"Microbrasserie & restaurant",
+    lat:46.8178912, lon:-71.2180951,
+    adresse:"310, rue Saint-Roch · Saint-Roch",
+    note:"4,6 ★", avis:"1 184 avis", prix:"$$", horaire:"dim. 12 h – 23 h",
+    tel:"+14185224373", telAffiche:"418 522-4373",
+    ton:"defaut", badge:"ok", badgeTexte:"Un autre jour, en fin d'après-midi",
+    quand:"apéro, basse-ville",
+    ancrage:{x:0, y:-30, ancre:"middle"},
+    topo:[
+      "La valeur sûre décontractée du séjour, à placer au bon moment de la journée.",
+      "Seize fûts, un carrousel de dégustation qui se partage bien à quatre, une grande terrasse, et une huitaine d'options sans alcool — rare et appréciable si quelqu'un ne boit pas. C'est d'abord une brasserie : on y va pour la bière et on mange autour.",
+      "Donc pas pour un vrai repas assis. Son intérêt par rapport à Griendel, c'est la position : en basse-ville, à deux pas de Saint-Joseph, donc parfaite pour couper une journée dans Saint-Roch."
+    ]
+  },
+  {
+    n:6, nom:"Poutineville", suite:"Saint-Roch",
     lat:46.8156226, lon:-71.2198589,
     adresse:"735, rue Saint-Joseph Est · Saint-Roch",
     note:"4,5 ★", avis:"4 722 avis", prix:"$$", horaire:"dim. 11 h – 20 h 30",
@@ -496,7 +512,7 @@ const RESTOS = [
     ]
   },
   {
-    n:6, nom:"La Buchette", suite:"",
+    n:7, nom:"La Buchette", suite:"",
     lat:46.8131322, lon:-71.2064395,
     adresse:"24, rue Sainte-Anne · Vieux-Québec",
     note:"4,6 ★", avis:"1 048 avis", prix:"$$", horaire:"tous les jours 8 h – 22 h 30",
@@ -507,7 +523,7 @@ const RESTOS = [
     topo:[
       "Brunch et décor chargé — une voiture accrochée au mur, des plaques d'immatriculation partout. C'est sympathique, et les avis sur l'accueil sont bons.",
       "Le problème est ailleurs : elle fait doublon avec La Buche, à trois cents mètres, sur un registre très proche et avec un service que plusieurs clients décrivent comme lent.",
-      "Si tu la gardes, ce sera en petit-déjeuner tôt, un jour de semaine. Sinon c'est celle que je sacrifie sans regret pour libérer un repas."
+      "Si vous la gardez, ce sera en petit-déjeuner tôt, un jour de semaine. Sinon c'est celle qu'on sacrifie sans regret pour libérer un repas."
     ]
   }
 ];
