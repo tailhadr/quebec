@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Six adresses · Québec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --eau:#0C2630;
+    --eau-fonce:#081C24;
+    --panneau:#12333D;
+    --panneau-clair:#194250;
+    --trait:#2A5261;
+    --cuivre:#7CC5AB;
+    --ambre:#E4A853;
+    --brique:#CF6049;
+    --craie:#EAF1EE;
+    --craie-doux:#96AFAC;
+    --display:"Bricolage Grotesque",-apple-system,"Segoe UI",sans-serif;
+    --corps:"Source Serif 4",Georgia,serif;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  }
+
+  *{box-sizing:border-box}
+
+  html,body{margin:0;padding:0}
+
+  body{
+    background:var(--eau-fonce);
+    color:var(--craie);
+    font-family:var(--corps);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{max-width:1180px;margin:0 auto;padding:28px 20px 64px}
+
+  /* ---- en-tête ---- */
+  header{margin-bottom:26px}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--cuivre);
+    margin:0 0 10px;
+  }
+
+  h1{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:clamp(30px,7vw,52px);
+    line-height:1.02;
+    letter-spacing:-.02em;
+    margin:0 0 12px;
+  }
+
+  h1 em{font-style:normal;color:var(--cuivre)}
+
+  .chapeau{
+    max-width:56ch;
+    margin:0;
+    color:var(--craie-doux);
+    font-size:16px;
+  }
+
+  /* ---- grille ---- */
+  .grille{
+    display:grid;
+    gap:18px;
+    grid-template-columns:1fr;
+    align-items:start;
+  }
+
+  @media (min-width:900px){
+    .grille{grid-template-columns:minmax(0,1fr) 400px}
+  }
+
+  .carte-plan{
+    background:var(--eau);
+    border:1px solid var(--trait);
+    border-radius:4px;
+    padding:10px;
+    position:relative;
+  }
+
+  svg{
+    display:block;
+    width:100%;
+    height:auto;
+    aspect-ratio:1000 / 961;
+    touch-action:manipulation;
+  }
+
+  /* ---- fond de plan ---- */
+  .eau-fill{fill:#0A3040}
+  .terre{fill:var(--eau)}
+  .riviere{fill:#0A3040}
+
+  .falaise-trait{
+    fill:none;
+    stroke:var(--trait);
+    stroke-width:2.5;
+    stroke-dasharray:1 9;
+    stroke-linecap:round;
+  }
+
+  .rue{
+    fill:none;
+    stroke:var(--trait);
+    stroke-width:2;
+  }
+
+  .toponyme{
+    font-family:var(--mono);
+    font-size:15px;
+    letter-spacing:.22em;
+    fill:var(--craie-doux);
+    opacity:.5;
+    text-transform:uppercase;
+  }
+
+  .legende-svg{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.06em;
+    fill:var(--craie-doux);
+    opacity:.55;
+  }
+
+  /* ---- épingles ---- */
+  .epingle{cursor:pointer}
+  .epingle:focus .halo{opacity:1;stroke:var(--ambre)}
+  .epingle:focus{outline:none}
+  .epingle:focus-visible .halo{opacity:1;stroke:var(--ambre)}
+
+  .halo{
+    fill:none;
+    stroke:var(--cuivre);
+    stroke-width:2;
+    opacity:0;
+    transition:opacity .18s ease, r .18s ease;
+  }
+
+  .epingle:hover .halo{opacity:.55}
+  .epingle.actif .halo{opacity:1}
+
+  .pastille{
+    fill:var(--panneau-clair);
+    stroke:var(--cuivre);
+    stroke-width:2.5;
+    transition:fill .18s ease;
+  }
+
+  .epingle.actif .pastille{fill:var(--cuivre)}
+  .epingle[data-ton="ferme"] .pastille{stroke:var(--brique)}
+  .epingle[data-ton="ferme"] .halo{stroke:var(--brique)}
+  .epingle[data-ton="ferme"].actif .pastille{fill:var(--brique)}
+  .epingle[data-ton="phare"] .pastille{stroke:var(--ambre)}
+  .epingle[data-ton="phare"] .halo{stroke:var(--ambre)}
+  .epingle[data-ton="phare"].actif .pastille{fill:var(--ambre)}
+
+  .numero{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:19px;
+    fill:var(--craie);
+    text-anchor:middle;
+    pointer-events:none;
+  }
+
+  .epingle.actif .numero{fill:var(--eau-fonce)}
+
+  .etiquette{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:16px;
+    fill:var(--craie);
+    pointer-events:none;
+    opacity:.82;
+  }
+
+  .epingle.actif .etiquette{opacity:1;fill:var(--cuivre)}
+  .epingle[data-ton="ferme"].actif .etiquette{fill:var(--brique)}
+  .epingle[data-ton="phare"].actif .etiquette{fill:var(--ambre)}
+
+  .note-plan{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--craie-doux);
+    opacity:.6;
+    margin:8px 4px 2px;
+    line-height:1.5;
+  }
+
+  /* ---- panneau de détail ---- */
+  .panneau{
+    background:var(--panneau);
+    border:1px solid var(--trait);
+    border-radius:4px;
+    padding:22px;
+    position:sticky;
+    top:18px;
+  }
+
+  @media (max-width:899px){.panneau{position:static}}
+
+  .badge{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    padding:4px 9px;
+    border-radius:2px;
+    margin-bottom:12px;
+  }
+
+  .badge.ok{background:rgba(124,197,171,.16);color:var(--cuivre)}
+  .badge.phare{background:rgba(228,168,83,.16);color:var(--ambre)}
+  .badge.ferme{background:rgba(207,96,73,.16);color:var(--brique)}
+
+  .panneau h2{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:27px;
+    line-height:1.08;
+    letter-spacing:-.015em;
+    margin:0 0 4px;
+  }
+
+  .adresse{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--craie-doux);
+    margin:0 0 18px;
+    line-height:1.6;
+  }
+
+  .faits{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--trait);
+    border:1px solid var(--trait);
+    margin-bottom:18px;
+  }
+
+  .fait{background:var(--panneau);padding:10px 12px}
+
+  .fait dt{
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--craie-doux);
+    margin:0 0 3px;
+  }
+
+  .fait dd{
+    margin:0;
+    font-family:var(--display);
+    font-weight:600;
+    font-size:15px;
+  }
+
+  .topo{font-size:15.5px;margin:0 0 18px}
+  .topo p{margin:0 0 11px}
+  .topo p:last-child{margin-bottom:0}
+
+  .tel{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--eau-fonce);
+    background:var(--cuivre);
+    text-decoration:none;
+    padding:9px 15px;
+    border-radius:2px;
+    letter-spacing:.03em;
+  }
+
+  .tel:hover{filter:brightness(1.1)}
+  .tel:focus-visible{outline:2px solid var(--ambre);outline-offset:2px}
+
+  /* ---- liste ---- */
+  .liste{margin-top:34px}
+
+  .liste h3{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--cuivre);
+    margin:0 0 14px;
+    font-weight:400;
+  }
+
+  .rang{
+    display:flex;
+    gap:14px;
+    align-items:baseline;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:0;
+    border-top:1px solid var(--trait);
+    padding:13px 4px;
+    color:var(--craie);
+    font-family:var(--corps);
+    font-size:15px;
+    cursor:pointer;
+  }
+
+  .rang:last-child{border-bottom:1px solid var(--trait)}
+  .rang:hover{background:rgba(124,197,171,.06)}
+  .rang:focus-visible{outline:2px solid var(--ambre);outline-offset:-2px}
+  .rang.actif{background:rgba(124,197,171,.1)}
+
+  .rang .n{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--craie-doux);
+    min-width:16px;
+  }
+
+  .rang .nom{
+    font-family:var(--display);
+    font-weight:600;
+    flex:1;
+  }
+
+  .rang .quand{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--craie-doux);
+    text-align:right;
+  }
+
+  footer{
+    margin-top:44px;
+    padding-top:18px;
+    border-top:1px solid var(--trait);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--craie-doux);
+    opacity:.7;
+    line-height:1.7;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Ville de Québec · dimanche 9 août</p>
+    <h1>Six adresses,<br>et <em>une seule</em> pour ce midi.</h1>
+    <p class="chapeau">Où on mange, et surtout quand. Touchez une épingle pour le détail.</p>
+  </header>
+
+  <div class="grille">
+
+    <div class="carte-plan">
+      <svg viewBox="0 0 1000 961" width="1000" height="961" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Plan schématique de la ville de Québec situant les six restaurants">
+
+        <rect width="1000" height="961" class="terre"/>
+
+        <!-- fleuve Saint-Laurent -->
+        <path class="eau-fill" d="M1000,30 L960,170 L1000,340 L1000,420 L935,620 L810,800 L700,961 L1000,961 Z"/>
+        <!-- rivière Saint-Charles -->
+        <path class="riviere" d="M0,0 L1000,0 L1000,34 L880,44 L700,26 L500,46 L300,44 L120,14 L0,26 Z"/>
+
+        <!-- falaise haute-ville / basse-ville -->
+        <path class="falaise-trait" d="M0,648 C120,624 250,632 320,652 C400,600 470,510 560,452 C660,392 740,346 830,322 C900,306 960,330 1000,362"/>
+
+        <!-- rue Saint-Joseph Est -->
+        <path class="rue" d="M40,509 L620,255"/>
+
+        <text class="toponyme" x="118" y="200">Saint-Roch</text>
+        <text class="toponyme" x="640" y="620">Vieux-Québec</text>
+        <text class="toponyme" x="60" y="880">Montcalm</text>
+
+        <text class="legende-svg" x="836" y="720" text-anchor="end" transform="rotate(-52 836 720)">Fleuve Saint-Laurent</text>
+        <text class="legende-svg" x="500" y="80" text-anchor="middle">Rivière Saint-Charles</text>
+        <text class="legende-svg" x="342" y="700">falaise · 60 m de dénivelé</text>
+        <text class="legende-svg" x="330" y="376" transform="rotate(-23.6 330 376)">rue Saint-Joseph Est</text>
+
+        <g id="epingles"></g>
+      </svg>
+      <p class="note-plan">Les six épingles sont placées à leurs coordonnées réelles. Le fond — fleuve, rivière, falaise — est schématique : il sert à lire les distances à pied, pas à naviguer.</p>
+    </div>
+
+    <div class="panneau" id="panneau" aria-live="polite"></div>
+  </div>
+
+  <div class="liste">
+    <h3>Dans l'ordre où je les ferais</h3>
+    <div id="liste"></div>
+  </div>
+
+  <footer>
+    Notes et horaires relevés le 9 août 2026 · les horaires d'été bougent, un coup de fil vaut mieux qu'une capture d'écran.
+  </footer>
+</div>
+
+<script>
+const BORNES = {lonMin:-71.2360, lonMax:-71.2010, latMin:46.8000, latMax:46.8230};
+const W = 1000, H = 961;
+
+const projX = lon => (lon - BORNES.lonMin) / (BORNES.lonMax - BORNES.lonMin) * W;
+const projY = lat => (BORNES.latMax - lat) / (BORNES.latMax - BORNES.latMin) * H;
+
+const RESTOS = [
+  {
+    n:1, nom:"Griendel", suite:"Brasserie artisanale",
+    lat:46.8047556, lon:-71.2261922,
+    adresse:"46, boulevard René-Lévesque Ouest · Montcalm",
+    note:"4,5 ★", avis:"2 024 avis", prix:"$$", horaire:"dim. 12 h – minuit",
+    tel:"+14185222552", telAffiche:"418 522-2552",
+    ton:"defaut", badge:"ok", badgeTexte:"Aujourd'hui, midi",
+    quand:"aujourd'hui",
+    ancrage:{x:14, y:-26, ancre:"middle"},
+    topo:[
+      "Le choix pour aujourd'hui, et le seul des six qui coche vraiment toutes les cases d'un dimanche midi d'août.",
+      "Ouverture à midi pile, terrasse, et une salle où les avis décrivent un mélange de familles et d'habitués du quartier plutôt qu'un flux de cars. La carte de bistro est assez large pour que chacun y trouve son compte sans avoir à négocier avec la cuisine.",
+      "Une réserve honnête : plusieurs clients trouvent la garniture de frites chiche sur le burger. Ce n'est pas rédhibitoire, c'est bon à savoir avant de commander."
+    ]
+  },
+  {
+    n:2, nom:"La Barberie", suite:"Microbrasserie & restaurant",
+    lat:46.8178912, lon:-71.2180951,
+    adresse:"310, rue Saint-Roch · Saint-Roch",
+    note:"4,6 ★", avis:"1 184 avis", prix:"$$", horaire:"dim. 12 h – 23 h",
+    tel:"+14185224373", telAffiche:"418 522-4373",
+    ton:"defaut", badge:"ok", badgeTexte:"Fin d'après-midi",
+    quand:"apéro",
+    ancrage:{x:0, y:-30, ancre:"middle"},
+    topo:[
+      "La valeur sûre décontractée du séjour, mais à placer au bon moment de la journée.",
+      "Seize fûts, un carrousel de dégustation qui se partage bien à quatre, une grande terrasse, et une huitaine d'options sans alcool — rare et appréciable si quelqu'un ne boit pas. C'est d'abord une brasserie : on y va pour la bière et on mange autour.",
+      "Donc pas pour un vrai repas assis. Parfait en revanche vers 17 h, après une journée de marche, avant d'aller dîner ailleurs."
+    ]
+  },
+  {
+    n:3, nom:"L'Affaire est ketchup", suite:"",
+    lat:46.8124389, lon:-71.2305139,
+    adresse:"46, rue Saint-Joseph Est · Saint-Roch",
+    note:"4,8 ★", avis:"1 150 avis", prix:"$$$$", horaire:"fermé le dimanche · service à 18 h",
+    tel:"+14185299020", telAffiche:"418 529-9020",
+    ton:"ferme", badge:"ferme", badgeTexte:"Fermé aujourd'hui · à réserver",
+    quand:"un soir de semaine",
+    ancrage:{x:0, y:36, ancre:"middle"},
+    topo:[
+      "La meilleure table des six, et l'écart n'est pas mince : 4,8 sur plus de mille avis, c'est un score qu'on voit rarement tenir à ce volume.",
+      "Le menu change chaque jour et n'est pas imprimé — il est annoncé à voix haute à toute la salle, en français et en anglais, une fois tout le monde assis. Cuisine ouverte, format maison, deux services par soirée.",
+      "Deux contraintes sérieuses, et elles jouent contre vous. Fermé le dimanche. Et la salle compte neuf tables dont une seule de quatre, plus quatre places au bar. À quatre, en plein mois d'août, ça se joue à l'anticipation : appelle aujourd'hui pour un soir de semaine."
+    ]
+  },
+  {
+    n:4, nom:"La Buche", suite:"",
+    lat:46.8112571, lon:-71.2080071,
+    adresse:"49, rue Saint-Louis · Vieux-Québec",
+    note:"4,5 ★", avis:"9 652 avis", prix:"$$", horaire:"dim. 8 h – 21 h 30",
+    tel:"+15815046894", telAffiche:"581 504-6894",
+    ton:"phare", badge:"phare", badgeTexte:"Un soir, réservé",
+    quand:"un soir",
+    ancrage:{x:-16, y:32, ancre:"end"},
+    topo:[
+      "Le répertoire québécois traditionnel joué franchement : tourtière, soupe aux pois, pâté chinois, fèves au lard, pouding chômeur, crêpes au sirop d'érable.",
+      "Neuf mille six cents avis, c'est deux informations en une. La qualité tient à ce volume, ce qui est un exploit. Et le volume lui-même dit exactement ce que sera la rue Saint-Louis un dimanche midi d'août. Les avis recommandent unanimement de réserver.",
+      "C'est pourtant la seule des six qui vous fera vraiment goûter la cuisine d'ici. Donc : oui, mais un soir, réservé, pas en arrivant à midi le nez au vent."
+    ]
+  },
+  {
+    n:5, nom:"Poutineville", suite:"Saint-Roch",
+    lat:46.8156226, lon:-71.2198589,
+    adresse:"735, rue Saint-Joseph Est · Saint-Roch",
+    note:"4,5 ★", avis:"4 722 avis", prix:"$$", horaire:"dim. 11 h – 20 h 30",
+    tel:"+15819818188", telAffiche:"581 981-8188",
+    ton:"defaut", badge:"ok", badgeTexte:"Un midi de semaine",
+    quand:"midi de semaine",
+    ancrage:{x:0, y:-30, ancre:"middle"},
+    topo:[
+      "Le passage folklorique obligé, à faire une fois, sans en attendre autre chose que ce qu'il est.",
+      "Poutines composables, portions généreuses, service rapide. C'est bien fait dans son genre et personne ne repart déçu de ce qu'il est venu chercher.",
+      "Ça reste un plat unique décliné trente fois : c'est une sortie, pas un dîner. Un midi de semaine, quand la file est courte."
+    ]
+  },
+  {
+    n:6, nom:"La Buchette", suite:"",
+    lat:46.8131322, lon:-71.2064395,
+    adresse:"24, rue Sainte-Anne · Vieux-Québec",
+    note:"4,6 ★", avis:"1 048 avis", prix:"$$", horaire:"tous les jours 8 h – 22 h 30",
+    tel:"+15815049550", telAffiche:"581 504-9550",
+    ton:"defaut", badge:"ok", badgeTexte:"Petit-déjeuner, ou rien",
+    quand:"petit-déj tôt",
+    ancrage:{x:-16, y:-20, ancre:"end"},
+    topo:[
+      "Brunch et décor chargé — une voiture accrochée au mur, des plaques d'immatriculation partout. C'est sympathique, et les avis sur l'accueil sont bons.",
+      "Le problème est ailleurs : elle fait doublon avec La Buche, à trois cents mètres, sur un registre très proche et avec un service que plusieurs clients décrivent comme lent.",
+      "Si tu la gardes, ce sera en petit-déjeuner tôt, un jour de semaine. Sinon c'est celle que je sacrifie sans regret pour libérer un repas."
+    ]
+  }
+];
+
+const groupe = document.getElementById("epingles");
+const panneau = document.getElementById("panneau");
+const liste = document.getElementById("liste");
+const NS = "http://www.w3.org/2000/svg";
+
+let actif = null;
+
+function svgEl(nom, attrs, texte) {
+  const e = document.createElementNS(NS, nom);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (texte !== undefined) e.textContent = texte;
+  return e;
+}
+
+RESTOS.forEach(r => {
+  const x = projX(r.lon), y = projY(r.lat);
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("class", "epingle");
+  g.setAttribute("data-ton", r.ton);
+  g.setAttribute("data-n", r.n);
+  g.setAttribute("tabindex", "0");
+  g.setAttribute("role", "button");
+  g.setAttribute("aria-label", r.nom);
+
+  g.appendChild(svgEl("circle", {class:"halo", cx:x, cy:y, r:27}));
+  g.appendChild(svgEl("circle", {class:"pastille", cx:x, cy:y, r:17}));
+  g.appendChild(svgEl("text", {class:"numero", x:x, y:y + 6.5}, r.n));
+  g.appendChild(svgEl("text", {
+    class:"etiquette",
+    x:x + r.ancrage.x,
+    y:y + r.ancrage.y,
+    "text-anchor":r.ancrage.ancre
+  }, r.nom));
+
+  g.addEventListener("click", () => choisir(r.n));
+  g.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choisir(r.n); }
+  });
+  groupe.appendChild(g);
+
+  const b = document.createElement("button");
+  b.className = "rang";
+  b.setAttribute("data-n", r.n);
+  b.innerHTML = '<span class="n">' + r.n + '</span>' +
+                '<span class="nom">' + r.nom + '</span>' +
+                '<span class="quand">' + r.quand + '</span>';
+  b.addEventListener("click", () => choisir(r.n));
+  liste.appendChild(b);
+});
+
+function choisir(n) {
+  const r = RESTOS.find(x => x.n === n);
+  actif = n;
+
+  document.querySelectorAll(".epingle").forEach(e =>
+    e.classList.toggle("actif", +e.dataset.n === n));
+  document.querySelectorAll(".rang").forEach(e =>
+    e.classList.toggle("actif", +e.dataset.n === n));
+
+  panneau.innerHTML =
+    '<span class="badge ' + r.badge + '">' + r.badgeTexte + '</span>' +
+    '<h2>' + r.nom + '</h2>' +
+    '<p class="adresse">' + r.adresse + (r.suite ? ' · ' + r.suite : '') + '</p>' +
+    '<dl class="faits">' +
+      '<div class="fait"><dt>Note</dt><dd>' + r.note + '</dd></div>' +
+      '<div class="fait"><dt>Volume</dt><dd>' + r.avis + '</dd></div>' +
+      '<div class="fait"><dt>Prix</dt><dd>' + r.prix + '</dd></div>' +
+      '<div class="fait"><dt>Ouverture</dt><dd>' + r.horaire + '</dd></div>' +
+    '</dl>' +
+    '<div class="topo">' + r.topo.map(p => '<p>' + p + '</p>').join('') + '</div>' +
+    '<a class="tel" href="tel:' + r.tel + '">Appeler · ' + r.telAffiche + '</a>';
+}
+
+choisir(1);
+</script>
+</body>
+</html>
